@@ -1,0 +1,542 @@
+/* =========================================================
+   DahabiPay — User KYC
+   Design tokens
+   ========================================================= */
+:root{
+  --navy: #071B4D;
+  --navy-700: #0E2760;
+  --navy-100: #EEF1F9;
+  --gold: #E5B93E;
+  --gold-600: #C99A22;
+  --ink: #1C2438;
+  --slate: #4B5670;
+  --slate-soft: #7C87A3;
+  --border: #E2E6F0;
+  --bg: #F5F7FB;
+  --white: #FFFFFF;
+  --success: #1E8E5A;
+  --success-bg: #E8F6EF;
+  --danger: #D64550;
+  --danger-bg: #FCEBEC;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  --shadow-card: 0 8px 24px rgba(7,27,77,0.08);
+  --font: Arial, Helvetica, sans-serif;
+}
+
+/* =========================================================
+   CRITICAL: this rule is what actually makes hidden="" work.
+   Without it, any element that also has a class setting its
+   own `display` (flex/grid/block) will render VISIBLE even
+   while `hidden` is present, because author CSS overrides the
+   browser's default `[hidden]{display:none}` rule regardless
+   of selector specificity. This single rule guarantees every
+   hidden element in this file stays hidden, full stop.
+   ========================================================= */
+[hidden]{ display: none !important; }
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+h1,h2,legend{font-family:var(--font);}
+button{font-family:var(--font);}
+img{max-width:100%;display:block;}
+
+/* =========================================================
+   Top bar
+   ========================================================= */
+.topbar{
+  background:var(--navy);
+  color:var(--white);
+  position:sticky;
+  top:0;
+  z-index:20;
+  box-shadow:0 2px 10px rgba(7,27,77,0.18);
+}
+.topbar__inner{
+  max-width:720px;
+  margin:0 auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:0;}
+.brand__logo{
+  height:30px;
+  width:auto;
+  max-width:160px;
+  display:block;
+  object-fit:contain;
+}
+.topbar__label{font-size:12px;color:#C9D2EC;font-weight:600;letter-spacing:.3px;text-transform:uppercase;}
+
+/* =========================================================
+   Layout
+   ========================================================= */
+.app{
+  max-width:720px;
+  margin:0 auto;
+  padding:20px 16px 64px;
+}
+
+/* =========================================================
+   Result screen (success)
+   ========================================================= */
+.result-screen{
+  min-height:60vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:14px;
+  padding:40px 20px;
+}
+.result-screen__icon{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--success-bg);color:var(--success);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;font-weight:700;
+}
+.result-screen h1{font-size:20px;margin:0;color:var(--navy);max-width:32ch;}
+.result-screen p{color:var(--slate);margin:0;max-width:38ch;font-size:14.5px;line-height:1.5;}
+
+.ref-card{
+  background:var(--navy);
+  color:var(--white);
+  border-radius:var(--radius-md);
+  padding:16px 24px;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:220px;
+}
+.ref-card__label{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#C9D2EC;}
+.ref-card__value{font-size:20px;font-weight:700;letter-spacing:.5px;color:var(--gold);}
+
+.status-badge{
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12.5px;
+  font-weight:700;
+  letter-spacing:.2px;
+}
+.status-badge--pending{background:#FFF4DE;color:#8A6404;}
+
+/* =========================================================
+   Stepper
+   ========================================================= */
+.stepper{margin-bottom:18px;}
+.stepper__list{
+  list-style:none;
+  display:flex;
+  justify-content:space-between;
+  padding:0;margin:0 0 10px;
+}
+.stepper__item{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  flex:1;
+  min-width:0;
+}
+.stepper__dot{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--white);
+  border:2px solid var(--border);
+  color:var(--slate-soft);
+  font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .25s ease;
+}
+.stepper__label{
+  font-size:10px;
+  color:var(--slate-soft);
+  text-align:center;
+  font-weight:600;
+  letter-spacing:.2px;
+  display:none;
+}
+@media (min-width:520px){ .stepper__label{display:block;} }
+
+.stepper__item.is-active .stepper__dot{
+  border-color:var(--navy);
+  background:var(--navy);
+  color:var(--gold);
+}
+.stepper__item.is-active .stepper__label{color:var(--navy);}
+.stepper__item.is-done .stepper__dot{
+  border-color:var(--gold);
+  background:var(--gold);
+  color:var(--navy);
+}
+.stepper__item.is-done .stepper__label{color:var(--gold-600);}
+
+.stepper__track{
+  height:4px;
+  background:var(--border);
+  border-radius:4px;
+  overflow:hidden;
+}
+.stepper__fill{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--gold-600),var(--gold));
+  transition:width .35s ease;
+}
+
+/* =========================================================
+   Card / form
+   ========================================================= */
+.card{
+  background:var(--white);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);
+  padding:22px 18px 20px;
+}
+.step{border:0;padding:0;margin:0;}
+.step__title{
+  font-size:18px;
+  font-weight:700;
+  color:var(--navy);
+  padding:0;margin:0 0 4px;
+}
+.step__hint{
+  color:var(--slate);
+  font-size:13.5px;
+  margin:0 0 18px;
+  line-height:1.45;
+}
+
+.field{margin-bottom:16px;}
+.field-row{display:flex;gap:12px;}
+.field-row .field{flex:1;min-width:0;}
+label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.req{color:var(--danger);}
+.opt{color:var(--slate-soft);font-weight:400;}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+select,
+textarea{
+  width:100%;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:11px 12px;
+  font-size:15px;
+  font-family:var(--font);
+  color:var(--ink);
+  background:var(--white);
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(7,27,77,0.10);
+}
+.field.has-error input,
+.field.has-error select,
+.field.has-error textarea{
+  border-color:var(--danger);
+}
+textarea{resize:vertical;}
+
+.phone-row{display:flex;gap:8px;}
+.phone-code{max-width:88px;flex:0 0 88px;}
+.phone-number{flex:1;min-width:0;}
+
+.field__error{
+  display:block;
+  color:var(--danger);
+  font-size:12px;
+  margin-top:5px;
+  min-height:14px;
+}
+
+.checkbox{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  font-size:13.5px;
+  color:var(--ink);
+  margin-bottom:12px;
+  cursor:pointer;
+  line-height:1.4;
+}
+.checkbox input{margin-top:3px;width:17px;height:17px;flex:0 0 17px;accent-color:var(--navy);}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+.btn{
+  border:none;
+  border-radius:var(--radius-sm);
+  padding:13px 20px;
+  font-size:15px;
+  font-weight:700;
+  font-family:var(--font);
+  cursor:pointer;
+  transition:transform .08s ease, opacity .15s ease, background .15s ease;
+}
+.btn:active{transform:scale(0.98);}
+.btn:disabled{opacity:.45;cursor:not-allowed;}
+.btn--primary{background:var(--navy);color:var(--white);}
+.btn--primary:hover:not(:disabled){background:var(--navy-700);}
+.btn--gold{background:var(--gold);color:var(--navy);}
+.btn--gold:hover:not(:disabled){background:var(--gold-600);}
+.btn--outline{background:var(--white);color:var(--navy);border:1.5px solid var(--navy);padding:10px 16px;}
+.btn--ghost{background:transparent;color:var(--slate);border:1.5px solid var(--border);}
+.btn--small{padding:8px 14px;font-size:13px;border-radius:7px;}
+.btn--danger{background:var(--danger-bg);color:var(--danger);}
+
+.wizard__nav{
+  display:flex;
+  gap:10px;
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid var(--border);
+}
+.wizard__nav .btn{flex:1;}
+.wizard__nav .btn--ghost{flex:0 0 auto;min-width:96px;}
+
+/* =========================================================
+   File uploader
+   ========================================================= */
+.uploader{
+  border:1.5px dashed var(--border);
+  border-radius:var(--radius-md);
+  padding:16px;
+  background:var(--navy-100);
+}
+.uploader.is-dragover{border-color:var(--gold);background:#FFF9EA;}
+.uploader__empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  padding:18px 6px;
+  text-align:center;
+}
+.uploader__empty span{font-size:12.5px;color:var(--slate-soft);}
+.uploader__preview img{
+  width:100%;
+  max-height:220px;
+  object-fit:contain;
+  border-radius:8px;
+  background:#fff;
+  border:1px solid var(--border);
+}
+.uploader__actions{display:flex;gap:8px;margin-top:10px;}
+
+/* =========================================================
+   Camera / liveness
+   ========================================================= */
+.camera{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+.camera__stage{
+  position:relative;
+  width:100%;
+  max-width:320px;
+  aspect-ratio:1/1;
+  border-radius:50%;
+  overflow:hidden;
+  background:#0A1230;
+}
+.camera__stage video{
+  width:100%;height:100%;
+  object-fit:cover;
+  transform:scaleX(-1);
+}
+.camera__stage canvas#overlayCanvas{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+.camera__stage #selfiePreview{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  object-fit:cover;
+}
+.camera__ring{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  pointer-events:none;
+}
+.camera__ring-track{
+  fill:none;
+  stroke:rgba(255,255,255,0.25);
+  stroke-width:6;
+}
+.camera__ring-fill{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:6;
+  stroke-linecap:round;
+  stroke-dasharray:578;
+  stroke-dashoffset:578;
+  transform:rotate(-90deg);
+  transform-origin:100px 100px;
+  transition:stroke-dashoffset .4s ease;
+}
+.camera__instruction{
+  font-weight:700;
+  color:var(--navy);
+  text-align:center;
+  font-size:15px;
+  min-height:20px;
+}
+.camera__status{
+  font-size:12.5px;
+  color:var(--slate);
+  text-align:center;
+  min-height:16px;
+}
+.camera__controls{display:flex;gap:10px;}
+.camera__error{
+  background:var(--danger-bg);
+  color:var(--danger);
+  border-radius:8px;
+  padding:12px 14px;
+  font-size:13px;
+  text-align:center;
+  max-width:340px;
+  line-height:1.4;
+}
+
+/* =========================================================
+   Review
+   ========================================================= */
+.review{
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.review__row{
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  padding:11px 14px;
+  font-size:13.5px;
+  border-bottom:1px solid var(--border);
+}
+.review__row:last-child{border-bottom:none;}
+.review__row:nth-child(even){background:#FAFBFD;}
+.review__label{color:var(--slate);flex:0 0 44%;}
+.review__value{color:var(--ink);font-weight:700;text-align:right;flex:1;word-break:break-word;}
+.review__section-title{
+  background:var(--navy);
+  color:var(--gold);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.4px;
+  text-transform:uppercase;
+  padding:9px 14px;
+}
+.declarations{margin-top:6px;}
+
+/* =========================================================
+   Toast
+   ========================================================= */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%) translateY(20px);
+  background:var(--ink);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:10px;
+  font-size:13.5px;
+  max-width:88vw;
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:100;
+}
+.toast.is-visible{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.is-error{background:var(--danger);}
+.toast.is-success{background:var(--success);}
+
+/* =========================================================
+   Loading overlay — ONLY ever shown by setLoading(true, ...)
+   inside the final submit handler. Hidden by default via the
+   native `hidden` attribute in the HTML, enforced by the
+   [hidden]{display:none !important} rule at the top of this
+   file so this class's own `display:flex` can never leak
+   through and show it on page load.
+   ========================================================= */
+.loading{
+  position:fixed;inset:0;
+  background:rgba(7,27,77,0.85);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  z-index:200;
+  text-align:center;
+  padding:20px;
+}
+.loading p{margin:0;font-size:15px;max-width:34ch;}
+.loader{
+  width:34px;height:34px;
+  border-radius:50%;
+  border:3px solid rgba(255,255,255,0.2);
+  border-top-color:var(--gold);
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* =========================================================
+   Responsive — verified at 360 / 390 / 430 / 768 / 1024
+   ========================================================= */
+@media (min-width:600px){
+  .card{padding:32px 36px 30px;}
+  .app{padding-top:32px;}
+}
+@media (min-width:768px){
+  .app{max-width:760px;}
+}
+@media (max-width:359px){
+  .card{padding:16px 12px;}
+  .stepper__dot{width:22px;height:22px;font-size:11px;}
+}
+@media (max-width:390px){
+  .topbar__inner{padding:11px 14px;}
+  .brand__logo{height:24px;max-width:120px;}
+  .topbar__label{font-size:10.5px;}
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+<title>Identity Verification — DahabiPay</title>
+<link rel="stylesheet" href="user-kyc.css" />
+</head>
+<body>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">
+        <img src="logo.png" alt="DahabiPay" class="brand__logo" id="brandLogo" />
+      </div>
+      <div class="topbar__label">Identity Verification</div>
+    </div>
+  </header>
+
+  <!-- ============ TOAST ============ -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+  <main class="app">
+
+    <!-- ============ WIZARD (visible immediately — no login, no loading gate) ============ -->
+    <section id="wizard" class="wizard">
+
+      <nav class="stepper" aria-label="Verification progress">
+        <ol class="stepper__list" id="stepperList">
+          <li class="stepper__item" data-step="1"><span class="stepper__dot">1</span><span class="stepper__label">Personal</span></li>
+          <li class="stepper__item" data-step="2"><span class="stepper__dot">2</span><span class="stepper__label">Contact</span></li>
+          <li class="stepper__item" data-step="3"><span class="stepper__dot">3</span><span class="stepper__label">Document</span></li>
+          <li class="stepper__item" data-step="4"><span class="stepper__dot">4</span><span class="stepper__label">Upload</span></li>
+          <li class="stepper__item" data-step="5"><span class="stepper__dot">5</span><span class="stepper__label">Face Check</span></li>
+          <li class="stepper__item" data-step="6"><span class="stepper__dot">6</span><span class="stepper__label">Review</span></li>
+        </ol>
+        <div class="stepper__track"><div class="stepper__fill" id="stepperFill"></div></div>
+      </nav>
+
+      <form id="kycForm" class="card" novalidate>
+
+        <!-- ===== STEP 1: PERSONAL ===== -->
+        <fieldset class="step" data-step="1">
+          <legend class="step__title">Personal Information</legend>
+          <p class="step__hint">Enter your details exactly as they appear on your ID document.</p>
+
+          <div class="field">
+            <label for="fullName">Full legal name <span class="req">*</span></label>
+            <input type="text" id="fullName" autocomplete="name" placeholder="e.g. Amina Yusuf Hassan" />
+            <span class="field__error" id="err-fullName"></span>
+          </div>
+
+          <div class="field">
+            <label for="dateOfBirth">Date of birth <span class="req">*</span></label>
+            <input type="date" id="dateOfBirth" />
+            <span class="field__error" id="err-dateOfBirth"></span>
+          </div>
+
+          <div class="field">
+            <label for="gender">Gender <span class="req">*</span></label>
+            <select id="gender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            <span class="field__error" id="err-gender"></span>
+          </div>
+
+          <div class="field">
+            <label for="nationality">Nationality <span class="req">*</span></label>
+            <select id="nationality">
+              <option value="">Select nationality</option>
+            </select>
+            <span class="field__error" id="err-nationality"></span>
+          </div>
+
+          <div class="field">
+            <label for="countryOfResidence">Country of residence <span class="req">*</span></label>
+            <select id="countryOfResidence">
+              <option value="">Select country</option>
+            </select>
+            <span class="field__error" id="err-countryOfResidence"></span>
+          </div>
+
+          <div class="field">
+            <label for="city">City <span class="req">*</span></label>
+            <input type="text" id="city" placeholder="e.g. Mogadishu" />
+            <span class="field__error" id="err-city"></span>
+          </div>
+        </fieldset>
+
+        <!-- ===== STEP 2: CONTACT ===== -->
+        <fieldset class="step" data-step="2" hidden>
+          <legend class="step__title">Contact Information</legend>
+          <p class="step__hint">We'll use this to reach you about your verification.</p>
+
+          <div class="field">
+            <label for="dialCode">Country code <span class="req">*</span></label>
+            <select id="dialCode">
+              <option value="">Select country code</option>
+            </select>
+            <span class="field__error" id="err-dialCode"></span>
+          </div>
+
+          <div class="field">
+            <label for="whatsappNumber">WhatsApp number <span class="req">*</span></label>
+            <input type="tel" id="whatsappNumber" placeholder="700 000 000" inputmode="tel" />
+            <span class="field__error" id="err-whatsappNumber"></span>
+          </div>
+
+          <div class="field">
+            <label for="email">Email <span class="opt">(optional)</span></label>
+            <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+            <span class="field__error" id="err-email"></span>
+          </div>
+
+          <div class="field">
+            <label for="address">Residential address <span class="req">*</span></label>
+            <textarea id="address" rows="3" placeholder="Street, building, area, city"></textarea>
+            <span class="field__error" id="err-address"></span>
+          </div>
+        </fieldset>
+
+        <!-- ===== STEP 3: IDENTITY DOCUMENT ===== -->
+        <fieldset class="step" data-step="3" hidden>
+          <legend class="step__title">Identity Document</legend>
+          <p class="step__hint">Tell us which document you'll be uploading.</p>
+
+          <div class="field">
+            <label for="idType">Document type <span class="req">*</span></label>
+            <select id="idType">
+              <option value="">Select document type</option>
+              <option value="national_id">National ID</option>
+              <option value="passport">Passport</option>
+              <option value="drivers_license">Driver's License</option>
+              <option value="residence_permit">Residence Permit</option>
+            </select>
+            <span class="field__error" id="err-idType"></span>
+          </div>
+
+          <div class="field">
+            <label for="idNumber">Document number <span class="req">*</span></label>
+            <input type="text" id="idNumber" placeholder="e.g. 32145678" />
+            <span class="field__error" id="err-idNumber"></span>
+          </div>
+
+          <div class="field">
+            <label for="idExpiry">Expiry date <span class="opt">(optional)</span></label>
+            <input type="date" id="idExpiry" />
+            <span class="field__error" id="err-idExpiry"></span>
+          </div>
+        </fieldset>
+
+        <!-- ===== STEP 4: DOCUMENT UPLOAD ===== -->
+        <fieldset class="step" data-step="4" hidden>
+          <legend class="step__title">Document Upload</legend>
+          <p class="step__hint">Clear, uncropped photos of your document. JPG, PNG or WEBP, up to 8MB each.</p>
+
+          <div class="field">
+            <label>Front of document <span class="req">*</span></label>
+            <div class="uploader" id="uploader-front">
+              <input type="file" id="fileFront" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden />
+              <div class="uploader__empty" id="uploaderEmpty-front">
+                <button type="button" class="btn btn--outline" id="btnPick-front">Choose photo</button>
+                <span>or drag a file here</span>
+              </div>
+              <div class="uploader__preview" id="uploaderPreview-front" hidden>
+                <img id="previewImg-front" alt="Front of document preview" />
+                <div class="uploader__actions">
+                  <button type="button" class="btn btn--small" id="btnReplace-front">Replace</button>
+                  <button type="button" class="btn btn--small btn--danger" id="btnRemove-front">Remove</button>
+                </div>
+              </div>
+            </div>
+            <span class="field__error" id="err-fileFront"></span>
+          </div>
+
+          <div class="field">
+            <label>Back of document <span class="opt" id="backOptionalTag">(optional)</span></label>
+            <div class="uploader" id="uploader-back">
+              <input type="file" id="fileBack" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" hidden />
+              <div class="uploader__empty" id="uploaderEmpty-back">
+                <button type="button" class="btn btn--outline" id="btnPick-back">Choose photo</button>
+                <span>or drag a file here</span>
+              </div>
+              <div class="uploader__preview" id="uploaderPreview-back" hidden>
+                <img id="previewImg-back" alt="Back of document preview" />
+                <div class="uploader__actions">
+                  <button type="button" class="btn btn--small" id="btnReplace-back">Replace</button>
+                  <button type="button" class="btn btn--small btn--danger" id="btnRemove-back">Remove</button>
+                </div>
+              </div>
+            </div>
+            <span class="field__error" id="err-fileBack"></span>
+          </div>
+        </fieldset>
+
+        <!-- ===== STEP 5: LIVE SELFIE / LIVENESS ===== -->
+        <fieldset class="step" data-step="5" hidden>
+          <legend class="step__title">Live Selfie</legend>
+          <p class="step__hint">We need a live photo of your face to confirm it's really you. This cannot be uploaded from your gallery.</p>
+
+          <div class="camera" id="cameraWrap">
+
+            <div class="camera__stage" id="cameraStage">
+              <video id="video" playsinline autoplay muted></video>
+              <canvas id="overlayCanvas"></canvas>
+              <svg class="camera__ring" id="livenessRing" viewBox="0 0 200 200" hidden>
+                <circle cx="100" cy="100" r="92" class="camera__ring-track"/>
+                <circle cx="100" cy="100" r="92" class="camera__ring-fill" id="ringFill"/>
+              </svg>
+              <img id="selfiePreview" alt="Captured selfie" hidden />
+            </div>
+
+            <p class="camera__instruction" id="cameraInstruction">Tap "Enable camera" to begin face verification.</p>
+
+            <div class="camera__status" id="cameraStatus"></div>
+
+            <div class="camera__controls" id="cameraControlsStart">
+              <button type="button" class="btn btn--primary" id="btnStartCamera">Enable camera</button>
+            </div>
+
+            <div class="camera__controls" id="cameraControlsRetake" hidden>
+              <button type="button" class="btn btn--outline" id="btnRetake">Retake</button>
+            </div>
+
+            <div class="camera__error" id="cameraError" hidden></div>
+          </div>
+
+          <span class="field__error" id="err-selfie"></span>
+        </fieldset>
+
+        <!-- ===== STEP 6: REVIEW & SUBMIT ===== -->
+        <fieldset class="step" data-step="6" hidden>
+          <legend class="step__title">Review &amp; Submit</legend>
+          <p class="step__hint">Please confirm your details before submitting.</p>
+
+          <div class="review" id="reviewContent">
+            <!-- populated by JS -->
+          </div>
+
+          <div class="declarations">
+            <label class="checkbox">
+              <input type="checkbox" id="declareTrue" />
+              <span>I confirm the information provided is true and complete.</span>
+            </label>
+            <label class="checkbox">
+              <input type="checkbox" id="declareAgree" />
+              <span>I agree to DahabiPay's KYC verification and privacy terms.</span>
+            </label>
+          </div>
+
+          <span class="field__error" id="err-declarations"></span>
+        </fieldset>
+
+        <!-- ===== NAV BUTTONS ===== -->
+        <div class="wizard__nav">
+          <button type="button" class="btn btn--ghost" id="btnBack" hidden>Back</button>
+          <button type="button" class="btn btn--primary" id="btnContinue">Continue</button>
+          <button type="button" class="btn btn--gold" id="btnSubmit" hidden disabled>Submit verification</button>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ============ SUCCESS SCREEN ============ -->
+    <section id="successScreen" class="result-screen" hidden>
+      <div class="result-screen__icon">✓</div>
+      <h1>Verification submitted successfully.</h1>
+      <p>Your KYC application is now pending review.</p>
+      <div class="ref-card">
+        <span class="ref-card__label">KYC Reference</span>
+        <span class="ref-card__value" id="kycRefValue">KYC-XXXXXXXX</span>
+      </div>
+      <span class="status-badge status-badge--pending">Pending review</span>
+    </section>
+
+  </main>
+
+  <!-- ============ LOADING OVERLAY — hidden until Submit is pressed ============ -->
+  <div id="loading" class="loading" hidden>
+    <div class="loader"></div>
+    <p id="loadingText">Submitting your verification...</p>
+  </div>
+
+  <script type="module" src="user-kyc.js"></script>
+</body>
+</html>
